@@ -1,0 +1,11 @@
+{
+    "App": {
+        "Mode": 0,
+        "Host": "0.0.0.0",
+        "Name": "comment-generation",
+        "Port": 8080
+    },
+    "LLM": {
+        "Temperature": 0.5
+    }
+}
