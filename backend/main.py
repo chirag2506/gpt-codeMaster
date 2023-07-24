@@ -4,9 +4,6 @@ from app_utils import *
 from flask import Flask, jsonify, render_template, request, session, redirect, abort, url_for
 from waitress import serve
 
-configFile = "config/app.setting.json"
-configuration = readJson(configFile)
-
 app = Flask(__name__)
 
 @app.route('/', methods = ['GET'])
@@ -20,11 +17,7 @@ def process_info():
     messages = json.loads(request.form["question"])
     question = messages['content']
     response = generateResponse(question)
-    # def percy():
-    #     print("chirag")
-
-    # if __name__ == "__main__":
-    #     percy()
+    # response = formatAnswer(response)
     resp["answer"] = response
 
     return jsonify(resp)

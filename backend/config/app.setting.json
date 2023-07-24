@@ -24,7 +24,7 @@
         "GCP": {
             "Model": "text-bison@001",
             "Region": "us-central1",
-            "MaxTokens": 3000
+            "MaxTokens": 1024
         },
         "AWS": {
             "Model": "amazon.titan-tg1-large",
