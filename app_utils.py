@@ -1,5 +1,6 @@
 import json
 import os
+from llmUtils import vertexLLM
 
 def readFile(filename):
     content = ""
@@ -46,5 +47,19 @@ def writeJson(filename, content):
 
     return status
 
+try:
+    llm = vertexLLM('text-bison@001', 0.1, 0.95, 10, 1000)
+except Exception as e:
+    print(e)
 
+
+def generateResponse(code):
+    try:
+        # ans = llm.predict("For the following code, add comments wherever it makes sense and improve the overall quality of code:\n"+code)
+        # response = ans
+        response = code
+    except Exception as e:
+        print(e)
+        response = "Error in generating comment. Please try later."
+    return response
 

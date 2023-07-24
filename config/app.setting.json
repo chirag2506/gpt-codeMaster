@@ -6,6 +6,30 @@
         "Port": 8080
     },
     "LLM": {
-        "Temperature": 0.5
+        "Provider": "GCP",
+        "ProviderOptions": [
+            "OpenAI",
+            "GCP",
+            "AWS"
+        ],
+        "Temperature": 0.1,
+        "TopP": 0.95,
+        "TopK": 10
+    },
+    "Models": {
+        "OpenAI": {
+            "Model": "gpt-3.5-turbo",
+            "MaxTokens": 2000
+        },
+        "GCP": {
+            "Model": "text-bison@001",
+            "Region": "us-central1",
+            "MaxTokens": 3000
+        },
+        "AWS": {
+            "Model": "amazon.titan-tg1-large",
+            "Region": "us-east-1",
+            "MaxTokens": 3000
+        }
     }
 }

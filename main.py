@@ -19,13 +19,13 @@ def process_info():
 
     messages = json.loads(request.form["question"])
     question = messages['content']
-    print(question)
+    response = generateResponse(question)
     # def percy():
     #     print("chirag")
 
     # if __name__ == "__main__":
     #     percy()
-    resp["answer"] = "helllllloooooooooo"
+    resp["answer"] = response
 
     return jsonify(resp)
 

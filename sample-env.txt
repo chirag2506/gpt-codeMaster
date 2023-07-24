@@ -1,1 +1,7 @@
+#if using OPEN AI LLM
 OPENAI_API_KEY = ''
+#if using GCP Vertex LLM
+GOOGLE_APPLICATION_CREDENTIALS = ''
+#if using AWS Bedrock LLM
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
