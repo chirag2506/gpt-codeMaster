@@ -2,19 +2,39 @@ from dotenv import load_dotenv
 load_dotenv()
 from app_utils import *
 from flask import Flask, jsonify, render_template, request, session, redirect, abort, url_for
+from datetime import datetime, timedelta, timezone
 from flask_cors import CORS
 from waitress import serve
-from flask_jwt_extended import create_access_token, set_access_cookies, JWTManager
+from flask_jwt_extended import create_access_token, set_access_cookies, JWTManager, get_jwt, get_jwt_identity, jwt_required
 
 app = Flask(__name__)
-CORS(app, resource={"/*": {"origins": "*"}})
-app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
+CORS(app, resource={"/*": {"origins": "http://localhost:3000/"}}, supports_credentials= True, expose_headers= ['Set-Cookie'])
+app.config["JWT_COOKIE_SECURE"] = False # True for prod (JWTs to be sent over https)
+app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+app.config["JWT_SECRET_KEY"] = os.environ['JWT_SECRET_KEY'] 
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 jwt = JWTManager(app)
 
 
 @app.route('/', methods = ['GET'])
 def render_page():
     return jsonify({"message": "welcome"})
+
+# Using an `after_request` callback, we refresh any token that is within 30
+# minutes of expiring. Change the timedeltas to match the needs of your application.
+@app.after_request
+def refresh_expiring_jwts(response):
+    try:
+        exp_timestamp = get_jwt()["exp"]
+        now = datetime.now(timezone.utc)
+        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        if target_timestamp > exp_timestamp:
+            access_token = create_access_token(identity=get_jwt_identity())
+            set_access_cookies(response, access_token, timedelta(hours=1))
+        return response
+    except (RuntimeError, KeyError):
+        # Case where there is not a valid JWT. Just return the original response
+        return response
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -23,11 +43,19 @@ def login():
     password = request.json.get('password')
     if email is None or password is None:
         response['msg'] = 'unauthorized'
+        return jsonify(response)
 
     access_token = create_access_token(identity=email)
-    print(access_token)
-    set_access_cookies(response, access_token)
-    return jsonify(response)
+    # print(access_token)
+    response = jsonify(response)
+    set_access_cookies(response, access_token, timedelta(hours=1))
+    return response
+
+@app.route("/getUser")
+@jwt_required()
+def protected():
+    identity=get_jwt_identity()
+    return jsonify(user = identity)
 
 @app.route('/botInfo', methods = ['POST'])
 def process_info():
