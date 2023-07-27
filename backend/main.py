@@ -5,7 +5,7 @@ from flask import Flask, jsonify, render_template, request, session, redirect, a
 from datetime import datetime, timedelta, timezone
 from flask_cors import CORS
 from waitress import serve
-from flask_jwt_extended import create_access_token, set_access_cookies, JWTManager, get_jwt, get_jwt_identity, jwt_required
+from flask_jwt_extended import create_access_token, set_access_cookies, JWTManager, get_jwt, get_jwt_identity, jwt_required, unset_jwt_cookies
 
 app = Flask(__name__)
 CORS(app, resource={"/*": {"origins": "http://localhost:3000/"}}, supports_credentials= True, expose_headers= ['Set-Cookie'])
@@ -53,9 +53,15 @@ def login():
 
 @app.route("/getUser")
 @jwt_required()
-def protected():
+def userIdentity():
     identity=get_jwt_identity()
     return jsonify(user = identity)
+
+@app.route("/logout", methods=['POST'])
+def logout():
+    response = jsonify({"msg": "logout successful"})
+    unset_jwt_cookies(response)
+    return response
 
 @app.route('/botInfo', methods = ['POST'])
 def process_info():

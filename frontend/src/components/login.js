@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
-import LogoImage from '../assets/logo.jpg'
-import axios from '../api/axios'
+import React, { useState } from 'react';
+import LogoImage from '../assets/logo.jpg';
+import axios from '../api/axios';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import authContext from '../context/authContext';
+
 
 export default function Login() {
 
+    const auth = useContext(authContext);
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
 
     const login = async (e) => {
         e.preventDefault();
@@ -18,19 +23,11 @@ export default function Login() {
                 }
             }
             const resp = await axios.post('/login', body, config);
+            auth.setAuth(true);
             console.log(resp.data);
+            navigate('/about');
         } catch (err) {
             console.log('Error In Logging in:', err)
-        }
-    }
-
-    const check = async (e) => {
-        try {
-            const resp = await axios.get('/getUser');
-            console.log(resp.data);
-            setLoading(true);
-        } catch (err) {
-            console.log('Error In Check:', err)
         }
     }
 
@@ -55,8 +52,6 @@ export default function Login() {
                     <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                 </form>
             </div>
-            <button type='submit' onClick={check}>Check</button>
-            {loading? (<div>Got</div>): (<div>No</div>)}
         </div>
     )
 }
