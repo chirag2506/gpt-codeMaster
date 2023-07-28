@@ -1,13 +1,15 @@
 from dotenv import load_dotenv
 load_dotenv()
-from app_utils import *
+from appUtils import *
 from flask import Flask, jsonify, render_template, request, session, redirect, abort, url_for
 from datetime import datetime, timedelta, timezone
 from flask_cors import CORS
 from waitress import serve
 from flask_jwt_extended import create_access_token, set_access_cookies, JWTManager, get_jwt, get_jwt_identity, jwt_required, unset_jwt_cookies
+from apis.sql.routes import sqlRouter
 
 app = Flask(__name__)
+app.register_blueprint(sqlRouter)
 CORS(app, resource={"/*": {"origins": "http://localhost:3000/"}}, supports_credentials= True, expose_headers= ['Set-Cookie'])
 app.config["JWT_COOKIE_SECURE"] = False # True for prod (JWTs to be sent over https)
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
@@ -38,11 +40,11 @@ def refresh_expiring_jwts(response):
 
 @app.route('/login', methods=['POST'])
 def login():
-    response = {'msg': 'login successful'}
+    response = {'message': 'login successful'}
     email = request.json.get('email')
     password = request.json.get('password')
     if email is None or password is None:
-        response['msg'] = 'unauthorized'
+        response['message'] = 'unauthorized'
         return jsonify(response)
 
     access_token = create_access_token(identity=email)
@@ -59,7 +61,7 @@ def userIdentity():
 
 @app.route("/logout", methods=['POST'])
 def logout():
-    response = jsonify({"msg": "logout successful"})
+    response = jsonify({"message": "logout successful"})
     unset_jwt_cookies(response)
     return response
 

@@ -45,6 +45,9 @@ export default function NavbarAuth(props) {
                                 </Link>
                                 <ul className="dropdown-menu">
                                     <li>
+                                        <Link className="dropdown-item" to="/history">History</Link>
+                                    </li>
+                                    <li>
                                         <Link className="dropdown-item" onClick={logout}>Logout</Link>
                                     </li>
                                 </ul>
