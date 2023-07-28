@@ -1,6 +1,6 @@
 import React from 'react';
-import NavbarAuth from './navbarAuth';
-import NavbarNoAuth from './navbarNoAuth';
+import NavbarAuth from './NavbarAuth';
+import NavbarNoAuth from './NavbarNoAuth';
 import { useContext } from 'react';
 import authContext from '../context/authContext';
 

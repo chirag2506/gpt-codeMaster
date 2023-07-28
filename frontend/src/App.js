@@ -1,12 +1,13 @@
 import './App.css';
-import Navbar from "./components/navbar";
-import Footer from "./components/footer"
-import Home from "./components/home";
-import About from "./components/about";
-import Login from "./components/login";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer"
+import Home from "./components/Home";
+import About from "./components/About";
+import Login from "./components/Login";
 import AuthState from './context/AuthState';
-import CodeGeneration from './components/codeGeneration';
-import CommentGeneration from './components/commentGeneration';
+import CodeGeneration from './components/CodeGeneration';
+import CommentGeneration from './components/CommentGeneration';
+import ProtectedRoute from './components/ProtectedRoute';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -24,8 +25,10 @@ function App() {
           } />
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
-          <Route path="/commentGeneration" element={<CommentGeneration />} />
-          <Route path="/codeGeneration" element={<CodeGeneration />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/commentGeneration" element={<CommentGeneration />} />
+            <Route path="/codeGeneration" element={<CodeGeneration />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthState>

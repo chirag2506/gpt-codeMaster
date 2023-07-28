@@ -33,7 +33,6 @@ export default function Login() {
 
     return (
         <div>
-            <h2 className='py-3 px-3'>LOGIN</h2>
             <div className="text-center">
                 <form onSubmit={login} className="form-signin">
                     <img className="mb-4" src={LogoImage} alt="" width="72" height="72" />
